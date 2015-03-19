@@ -40,7 +40,7 @@ su - sparkmanager # Password is spark
 ssh-keygen -t rsa -P ""
 ```
 
-**Copier la clé publique sur les autres machines du cluster** 
+**Copier la clé publique sur les autres machines du cluster**  
 Cela se fait par l'ajour de la clé dans les métadonnées
 ```sh
 nano ~/.ssh/id_dsa.pub
