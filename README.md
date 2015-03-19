@@ -4,10 +4,9 @@ Cet article est écrit en _mars 2015._
 En ce moment la version actuelle de _Spark_ est **1.3**  
 
 _L'article couvre les points suivants:_
-- Installation des présrequis
-- Spark build et installation
+- Installation des pré-requis
+- Création et installation de spark
 - Configuration basique de spark
-- standalone cluster setup (one master and 4 slaves on a single machine)
 - Deploiement de spark sur un cluster
 
 _Caractérisques:_
@@ -20,98 +19,33 @@ _Caractérisques:_
 - Git 1.7.9.5 
   
   
-The official one-liner describes Spark as "a general purpose cluster computing platform".  
-
-Spark was conceived and developed at Berkeley labs. It is currently incubated at Apache and improved and maintained by a rapidly growing community of users, thus it's expected to graduate to top-level project very soon.  
-It's written mainly in Scala, and provides Scala, Java and Python APIs.  
-Scala API provides a way to write concise, higher level routines that effectively manipulate distributed data.  
-
-Here's a quick example of how straightforward it is to distribute some arbitrary data with Scala API:
-
-```scala
-// parallelized collection example
-// example used Scala interpreter (also called 'repl') as an interface to Spark
-
-// declare scala array:
-scala> val data = Array(1, 2, 3, 4, 5)
-
-// Scala interpreter responds with:
-data: Array[Int] = Array(1, 2, 3, 4, 5)
-
-// distribute the array in a cluster:
-scala> val distData = sc.parallelize(data)
-
-// sc is an instance of SparkCluster that's initialized for you by Scala repl
-
-// returns Resilient Distributed Dataset:
-distData: spark.RDD[Int] = spark.ParallelCollection@88eebe8e  // repl output
-```
-
-### What the hell is RDD?
-**Resilient Distributed Dataset** is a collection that has been distributed _all over_ the Spark cluster. RDDs' main purpose is to support higher-level, parallel operations on data in a straightforward manner.  
-There are currently two types of RDDs: **parallelized collections**, which take an existing Scala collection and run operations on it in parallel, and **Hadoop** datasets, which run functions on each record of a file in _HDFS_ (or any other storage system supported by _Hadoop_).
-
-## Prereqs
-First, let's get the requirements out of the way.  
-
-Create user sparkmanager
+### Installation des pré-requis
+Créer un utilusateur sparkmanager
 ```sh
 sudo adduser sparkmanager # mot de passe: spark
 ```
 
 Désactiver le mot de passe du compte utilisateur sparkmanager
 ```sh
-sudo nano /etc/sudoers
+sudo sh -c "echo 'sparkmanager ALL=NOPASSWD: ALL' >> /etc/sudoers"
 ```
 
-Ajouter ce code dans le fichier /etc/sudoers
-```sh
-sparkmanager ALL=NOPASSWD: ALL
-```
-
-Log to sparkmanager
+Connecter en tant que sparkmanager
 ```sh
 su - sparkmanager # Password is spark
 ```
 
-Générer une clé ssh sur le noeud maitre pour pouvoir ouvrir une session sur le noued sans fournir le mot de passe
+Générer une clé ssh sur le noeud maitre
 ```sh
 ssh-keygen -t rsa -P ""
 ```
 
-Copier la clé publique sur les autres machines du cluster via ssh-copy-id ou les métadonnées (cas de google compute engine)
+Copier la clé publique sur les autres machines du cluster 
+Cela se fait par l'ajour de la clé dans les métadonnées
 ```sh
-ssh-copy-id -i ~/.ssh/id_dsa.pub hadoopmanager@abdoop-cluster-maitre-bis
+nano ~/.ssh/id_dsa.pub
 ```
-
-Faire ifconfig pour trouver l'IP qui repond sur eth0. C'est cette IP qui sera par la suite utilisée dans /etc/hosts
-```sh
-ifconfig -a
-```
-
-Paramétrer le fichier /etc/hosts de chaque noeud
-```sh
-sudo nano /etc/hosts
-```
-
-
-### Ajouter le code suivant dans le fichier /etc/hosts
-```sh
-abd-spark-maitre 10.240.31.180
-abd-spark-slave1 10.240.242.229
-abd-spark-slave2 10.240.158.224
-abd-spark-slave3 10.240.250.92
-abd-spark-slave4 10.240.224.38
-abd-spark-slave5 10.240.44.176
-```
-
-### Install Oracle's JDK6
-Since Oracle, after they acquired Java from Sun, changed license agreement (not in a good way), Canonical no longer provides packages for Oracle's Java. Since we need oracle's version of java, we'll need to install it and set it to be the default JVM on our system.  
-
-> We probably don't need Oracle's Java, but I had some weird problems while building Spark with OpenJDK - presumably due to the fact that open-jdk places jars in `/usr/share/java`, I'm not really sure, but installation of oracle-java effectively solved all those problems, so I haven't investigated any further what exactly happened there.
-
-Here's how:  
-
+Install Oracle's JDK6
 ```sh
 # you may or may not want to remove open-jdk (not necessary):
 sudo apt-get purge openjdk*
@@ -138,26 +72,8 @@ ls -lat
 
 ![java default](https://raw.github.com/mbonaci/mbo-spark/master/resources/java-default.PNG)
 
-If you see some other java version as default, you can fix that by executing either of these:
 
-```sh
-# to make oracle's jdk6 the default:
-sudo apt-get install oracle-java6-set-default
-
-# the other way of setting default java is:
-sudo update-alternatives --config java
-
-# are we good?
-file `which java`
-# should return:
-# /usr/bin/java: symbolic link to `/etc/alternatives/java'
-
-file /etc/alternatives/java
-# should return:
-# /etc/alternatives/java: symbolic link to `/usr/lib/jvm/java-6-oracle/jre/bin/java'
-```
-
-**Check/set `JAVA_HOME`**  
+**Verifier `JAVA_HOME`**  
 
 For a good measure, I like to set `JAVA_HOME` explicitly (_Spark_ checks for its existence).
 
