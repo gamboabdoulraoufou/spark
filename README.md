@@ -3,13 +3,13 @@
 Cet article est écrit en _mars 2015._  
 En ce moment la version actuelle de _Spark_ est **1.3.0**  
 
-_L'article couvre les points suivants:_
+**_L'article couvre les points suivants:_**
 - Installation des pré-requis
 - Création et installation de spark
 - Configuration basique de spark
 - Deploiement de spark sur un cluster
 
-_Caractérisques:_
+**_Caractérisques:_**
 - 2 VM sur Google Compute Engine
 - OS: Ubuntu 12.04
 - OpenJDK 1.6.0_27
@@ -20,32 +20,32 @@ _Caractérisques:_
   
   
 ### Installation des pré-requis
-Créer un utilusateur sparkmanager
+**Créer un utilusateur sparkmanager**
 ```sh
 sudo adduser sparkmanager # mot de passe: spark
 ```
 
-Désactiver le mot de passe du compte utilisateur sparkmanager
+**Désactiver le mot de passe du compte utilisateur sparkmanager**
 ```sh
 sudo sh -c "echo 'sparkmanager ALL=NOPASSWD: ALL' >> /etc/sudoers"
 ```
 
-Connecter en tant que sparkmanager
+**Connecter en tant que sparkmanager**
 ```sh
 su - sparkmanager # Password is spark
 ```
 
-Générer une clé ssh sur le noeud maitre
+**Générer une clé ssh sur le noeud maitre**
 ```sh
 ssh-keygen -t rsa -P ""
 ```
 
-Copier la clé publique sur les autres machines du cluster 
+**Copier la clé publique sur les autres machines du cluster** 
 Cela se fait par l'ajour de la clé dans les métadonnées
 ```sh
 nano ~/.ssh/id_dsa.pub
 ```
-Install Oracle's JDK6
+**Install Oracle's JDK6**
 ```sh
 # you may or may not want to remove open-jdk (not necessary):
 sudo apt-get purge openjdk*
