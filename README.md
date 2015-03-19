@@ -60,55 +60,45 @@ sudo apt-get update
 sudo apt-get install oracle-java6-installer
 ```
 
-That should install java and make it default, all in one go.  
-If you check with:  
-
+**Vérifier si java pointe JRE**
 ```sh
 cd /etc/alternatives
-ls -lat
+ls -lat | grep java
 ```
 
-... you should see that `java` symlink points to JRE, that's inside our newly installed JDK:
+... vous devez avoir quelque chose qui ressemble à ça
 
 ![java default](https://raw.github.com/mbonaci/mbo-spark/master/resources/java-default.PNG)
 
 
 **Verifier `JAVA_HOME`**  
-
-For a good measure, I like to set `JAVA_HOME` explicitly (_Spark_ checks for its existence).
-
 ```sh
-# check where it currently points
+# Verifier où pointe java
 echo $JAVA_HOME
-# if you're doing this on a fresh machine
-# and you just installed Java for the first time
-# JAVA_HOME should not be set (you get an empty line when you echo it)
+# Si vous installer java pour la première fois
+# JAVA_HOME ne retourne rien
 
-################## either set it system wide ####################
-sudo echo "JAVA_HOME=/usr/lib/jvm/java-6-oracle" >> /etc/environment
-
-# to reload
+# Configurer JAVA_HOME pour une nouvelle installation de java
+echo "JAVA_HOME=/usr/lib/jvm/java-6-oracle/" >> /etc/environment # ~/.pam_environment
+# Charger
 source /etc/environment
 
-################## or only for the current user #################
+# Configurer JAVA_HOME pour une ancienne installation
 echo "JAVA_HOME=/usr/lib/jvm/java-6-oracle/" >> ~/.pam_environment
 
-# to reload
+# Charger
 source ~/.pam_environment
 
-#################################################################
-
-# now try it out
+# Verifier à nouveau où pointe java
 echo $JAVA_HOME
 ```
 
-> `.pam_environment` is the new `.bashrc`. [What?](https://help.ubuntu.com/community/EnvironmentVariables#Session-wide_environment_variables)
+> `.pam_environment` est le nouveau `.bashrc`. [Pourquoi?](https://help.ubuntu.com/community/EnvironmentVariables#Session-wide_environment_variables)
   
-> Having problems with Java setup? Check the [latest Ubuntu Java documentation](https://help.ubuntu.com/community/Java).
 
-### Scala
+**Installer Scala**
 ```sh
-# Install Scala
+# Installation de Scala
 sudo apt-get remove scala-library scala
 wget http://www.scala-lang.org/files/archive/scala-2.11.4.deb
 sudo dpkg -i scala-2.11.4.deb
@@ -117,50 +107,32 @@ sudo apt-get install scala
 ```
 
 ```sh
-# to check whether the installation went well:
+# Vérifier si l'installation est bien faite
 scala -version
 
-# should spit out:
+# Vous devez avoir:
 Scala code runner version 2.11.4 -- Copyright 2002-2011, LAMP/EPFL
 ```
 
-**Check/set `SCALA_HOME`**  
+**Configurer `SCALA_HOME`**  
 
 ```sh
-# I'll set SCALA_HOME only for my user sessions
-# who knows, maybe my wife will like to use another version :)
 echo "SCALA_HOME=/usr/share/java" >> ~/.pam_environment
 
-# again, same as with java, to reload:
+# Tout comme avec java on charge scala
 source ~/.pam_environment
 
-# now try it out
+# On affiche le chemin de scala
 echo $SCALA_HOME
 ```
 
-### Install Maven
-_Skip if you'll choose to install Spark from binaries (see the next section for more info)_
-This one is dead simple: 
+**Installer Maven**
 
 ```sh
 sudo apt-get install maven
 ```
 
-Be warned, a large download will take place.  
-It is flat out awful that a dependency & build management tool may become so bloated that it **weighs 146MB**, but that's a whole [different story](https://github.com/mbonaci/mbo-storm/wiki/Storm-setup-in-Eclipse-with-Maven,-Git-and-GitHub#a-note-about-maven)...
-
-## Install Spark
-We'll try, like a couple of hoodlums, to build the cutting edge, development version of Spark ourselves. Screw binaries, right :)  
-  
-If you were to say that this punk move will just complicate things, you wouldn't be far from truth. So, if you'd like to simplify things a bit, and avoid possible alpha-version bugs down the road, go ahead and download (and install) Spark binaries from [here](http://spark.incubator.apache.org/downloads.html).  
-If, on the other hand, you're not scared, keep following instructions.  
-Just kidding.  
-No, honestly, I really suggest that you use binaries (and skip to [OMG! section](#omg-i-have-a-running-spark-in-my-home)).
-
-> Back to the story, so my grandma was building Spark from source the other day and she noticed a couple of build errors...
-
-- to get the Spark source code:
-
+**Installer Spark**
 ```sh
 # clone the development repo:
 # git clone git://github.com/apache/incubator-spark.git
