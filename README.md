@@ -160,6 +160,11 @@ build/mvn -Pyarn -Phadoop-2.4 -Dhadoop.version=2.4.0 -DskipTests clean package
 # Débuter standalone master en localhost
 ./sbin/start-master.sh
 
+#
+/bin/spark-class org.apache.spark.deploy.worker.Worker spark://abd-spark-cluster:7077
+
+# Connecter à http://IP:8080
+
 # Lancer spark en mode interactif
 ./bin/spark-shell
 
@@ -181,7 +186,7 @@ nano conf/slaves
 # Ajouter les hôtes des workers (1 hôte par ligne)
 ```
 
-**Lancer les workers cluster standalone**
+**Lancer les workers du cluster standalone**
 ```sh
 # Lancer le worker master
 ./sbin/start-master.sh 
