@@ -1,7 +1,7 @@
 
 
 Cet article est écrit en _mars 2015._  
-En ce moment la version actuelle de _Spark_ est **1.3.0**  
+En ce moment la dernière version de _Spark_ etait **1.3.0**  
 
 **_L'article couvre les points suivants:_**
 - Installation des pré-requis
