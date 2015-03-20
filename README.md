@@ -157,10 +157,13 @@ build/mvn -Pyarn -Phadoop-2.4 -Dhadoop.version=2.4.0 -DskipTests clean package
 
 **Lancer spark en mode standalone**
 ```sh
-# Débuter standalone master en localhost
+# lancer le noeud master du cluster standalone en localhost
 ./sbin/start-master.sh
 
-#
+# Lancer des workers
+# /bin/spark-shell --master spark://IP:PORT
+# Par exemple j'ai une machine dont le nom du hote est abd-spark-cluster
+# je peux lancer cette machine sur mon cluster à l'aide de la commande suivante
 /bin/spark-class org.apache.spark.deploy.worker.Worker spark://abd-spark-cluster:7077
 
 # Connecter à http://IP:8080
