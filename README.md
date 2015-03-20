@@ -155,19 +155,63 @@ export MAVEN_OPTS="-Xmx2g -XX:MaxPermSize=512M -XX:ReservedCodeCacheSize=512m"
 build/mvn -Pyarn -Phadoop-2.4 -Dhadoop.version=2.4.0 -DskipTests clean package
 ```
 
-**Lancer spark**
+**Lancer spark en mode standalone**
 ```sh
-# En localhost
+# Débuter standalone master en localhost
 ./sbin/start-master.sh
 
+# Lancer spark en mode interactif
+./bin/spark-shell
+
+# Quitter le mode interactif 
+exit
+
+# Arreter Spark
+./sbin/stop-master.sh
 ```
+
+Vous devez avoir quelque chose comme ça
+
+![java default](https://raw.github.com/mbonaci/mbo-spark/master/resources/java-default.PNG)
+
+**Ajouter un worker au cluster standalone**
+```sh
+# Créer un ficher conf/slaves
+nano conf/slaves
+# Ajouter les hôtes des workers (1 hôte par ligne)
+```
+
+**Ajouter un worker au cluster standalone**
+```sh
+# Lancer le worker master
+./sbin/start-master.sh 
+
+# Lancer les workers slave
+./sbin/start-slaves.sh
+
+# Lancer le tous les workers
+./sbin/start-all.sh 
+```
+
+**Arreter les workers**
+```sh
+# Arreter le worker maitre
+./sbin/stop-master.sh 
+
+# Arreter les workers slave
+./sbin/stop-slaves.sh 
+
+# Arreter tous les workers
+./sbin/stop-all.sh
+```
+ppppppppppppp
 
 ```sh
 # to start the Spark master on your localhost:
 ./sbin/start-master.sh
 
 # Arreter Spark
-./bin/stop-all.sh
+./sbin/stop-master.sh
 
 ** Deployer Spark**
 # 1-Standalone cluster
