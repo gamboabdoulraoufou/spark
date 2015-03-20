@@ -132,6 +132,12 @@ echo $SCALA_HOME
 sudo apt-get install maven
 ```
 
+**Installer GIT**
+
+```sh
+sudo apt-get install git
+```
+
 **Installer Spark**
 ```sh
 # cloner le dossier
