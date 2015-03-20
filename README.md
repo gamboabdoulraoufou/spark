@@ -181,7 +181,7 @@ nano conf/slaves
 # Ajouter les hôtes des workers (1 hôte par ligne)
 ```
 
-**Ajouter un worker au cluster standalone**
+**Lancer les workers cluster standalone**
 ```sh
 # Lancer le worker master
 ./sbin/start-master.sh 
@@ -193,7 +193,7 @@ nano conf/slaves
 ./sbin/start-all.sh 
 ```
 
-**Arreter les workers**
+**Arreter les workers cluster standalone**
 ```sh
 # Arreter le worker maitre
 ./sbin/stop-master.sh 
@@ -204,25 +204,9 @@ nano conf/slaves
 # Arreter tous les workers
 ./sbin/stop-all.sh
 ```
-ppppppppppppp
 
-```sh
-# to start the Spark master on your localhost:
-./sbin/start-master.sh
+**Lancer spark sur un cluster Yarn**
 
-# Arreter Spark
-./sbin/stop-master.sh
 
-** Deployer Spark**
-# 1-Standalone cluster
-./bin/spark-class org.apache.spark.deploy.worker.Worker spark://IP:PORT
-
-# Connecter sur http://IP:8080
-
-# 2- Sur YARN
-./bin/spark-submit --class path.to.your.Class --master yarn-cluster [options] <app jar> [app options]
-
-./bin/spark-shell --master yarn-client
-```
 
 
