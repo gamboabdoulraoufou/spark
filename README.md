@@ -160,7 +160,7 @@ build/mvn -Pyarn -Phadoop-2.4 -Dhadoop.version=2.4.0 -DskipTests clean package
 # lancer le noeud master du cluster standalone en localhost
 ./sbin/start-master.sh
 
-# Lancer des workers
+# Lancer le workers
 # /bin/spark-shell --master spark://IP:PORT
 # Par exemple j'ai une machine dont le nom du hote est abd-spark-cluster
 # je peux lancer cette machine sur mon cluster à l'aide de la commande suivante
@@ -182,14 +182,27 @@ Vous devez avoir quelque chose comme ça
 
 ![java default](https://raw.github.com/mbonaci/mbo-spark/master/resources/java-default.PNG)
 
-**Ajouter un worker au cluster standalone**
+
+**Ajouter 1 worker maitre et 4 workers slaves sur notre machine client (en loclahost)**
 ```sh
-# Créer un ficher conf/slaves
+# Créer le fichier spark-env.sh
+cp ./conf/spark-env.sh.template ./conf/spark-env.sh
+
+# Ajouter le paramètre suivant dans le fichier spark-env.sh
+echo "export SPARK_WORKER_INSTANCES=4" >> ./conf/spark-env.sh
+
+# Lancer les workers slave
+./sbin/start-slaves.sh
+```
+
+**Ajouter des workers au cluster standalone**
+```sh
+# Créer un ficher conf/slaves dans le worker maitre
 nano conf/slaves
 # Ajouter les hôtes des workers (1 hôte par ligne)
 ```
 
-**Lancer les workers du cluster standalone**
+**Lancer les workers ajoutés précédemment**
 ```sh
 # Lancer le worker master
 ./sbin/start-master.sh 
@@ -213,7 +226,6 @@ nano conf/slaves
 ./sbin/stop-all.sh
 ```
 
-**Lancer spark sur un cluster Yarn**
 
 
 
