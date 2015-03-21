@@ -160,50 +160,57 @@ build/mvn -Pyarn -Phadoop-2.4 -Dhadoop.version=2.4.0 -DskipTests clean package
 # lancer le noeud master du cluster standalone en localhost
 ./sbin/start-master.sh
 
-# Lancer le workers
-# /bin/spark-shell --master spark://IP:PORT
-# Par exemple j'ai une machine dont le nom du hote est abd-spark-cluster
-# je peux lancer cette machine sur mon cluster à l'aide de la commande suivante
-/bin/spark-class org.apache.spark.deploy.worker.Worker spark://abd-spark-cluster:7077
-
-# Connecter à http://IP:8080
-
-# Lancer spark en mode interactif
+# Lancer spark en mode interactif Scala
 ./bin/spark-shell
 
-# Quitter le mode interactif 
-exit
+# Quitter le mode interactif Scala
+exit ()
 
-# Arreter Spark
-./sbin/stop-master.sh
-```
+# Lancer spark en mode interactif Python
+./bin/pyspark-shell
 
-Vous devez avoir quelque chose comme ça
-
-![java default](https://raw.github.com/mbonaci/mbo-spark/master/resources/java-default.PNG)
+# Quitter le mode interactif Python
+exit ()
 
 
-**Ajouter 1 worker maitre et 4 workers slaves sur notre machine client (en loclahost)**
-```sh
-# Créer le fichier spark-env.sh
+# Lancer des workers sur le cluster (tous les workers sont sur 1 seule machine)
+# Créer un fichier spark-env.sh dans le dossier conf
 cp ./conf/spark-env.sh.template ./conf/spark-env.sh
 
 # Ajouter le paramètre suivant dans le fichier spark-env.sh
 echo "export SPARK_WORKER_INSTANCES=4" >> ./conf/spark-env.sh
 
+# lancer le noeud master
+./sbin/start-master.sh
+
 # Lancer les workers slave
 ./sbin/start-slaves.sh
-```
 
-**Ajouter des workers au cluster standalone**
-```sh
+# Ajouter manuellement des workers (noeuds) sur le cluster
+# /bin/spark-shell --master spark://IP:PORT 
+# Par exemple j'ai 2 machines dont le nom du hote sont: abd-spark-cluster et abd-spark-slave1
+# je peux lancer ces machines sur mon cluster à l'aide de la commande suivante
+./bin/spark-class org.apache.spark.deploy.worker.Worker spark://abd-spark-cluster:7077
+
+# Connecter à http://IP:8080
+
+./bin/spark-class org.apache.spark.deploy.worker.Worker spark://abd-spark-slave1:7077
+
+# Connecter à http://IP:8080 pour voir le changement
+
+# Arreter tous les workers
+./sbin/stop-all.sh
+
+# Arreter le noeud master
+./sbin/stop-master.sh
+
+
+# Ajouter automatiquement des workers (noeuds) sur le cluster
 # Créer un ficher conf/slaves dans le worker maitre
 nano conf/slaves
 # Ajouter les hôtes des workers (1 hôte par ligne)
-```
 
-**Lancer les workers ajoutés précédemment**
-```sh
+**Lancer les workers ajoutés précédemment (on est en mode de deployement standalone)**
 # Lancer le worker master
 ./sbin/start-master.sh 
 
@@ -212,9 +219,15 @@ nano conf/slaves
 
 # Lancer le tous les workers
 ./sbin/start-all.sh 
+
+# Arreter tous les workers
+./sbin/stop-all.sh
+
+# Arreter le noeud master
+./sbin/stop-master.sh
 ```
 
-**Arreter les workers cluster standalone**
+**Arreter les workers (on est en mode de deployement standalone)**
 ```sh
 # Arreter le worker maitre
 ./sbin/stop-master.sh 
