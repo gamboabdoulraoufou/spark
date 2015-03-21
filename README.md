@@ -170,7 +170,7 @@ exit ()
 exit ()
 ```
 
-**Lancer deployer un cluster spark en mode standalone sur un seul noeud (avec 1 ou plusieurs workers)**
+**Deployer un cluster spark en mode standalone sur un seul noeud (avec 1 ou plusieurs workers)**
 ```sh
 # lancer le noeud master du cluster spark
 ./sbin/start-master.sh
@@ -196,63 +196,48 @@ echo "export SPARK_WORKER_INSTANCES=4" >> ./conf/spark-env.sh
 ./sbin/stop-master.sh
 ```
 
-**Lancer deployer un cluster spark en mode standalone sur plusieurs noeuds (avec plusieurs workers)**
+**Déployer manuellement un cluster spark en mode standalone sur un noeud (noeud maitre et worker)**
 ```sh
 # lancer le noeud master
 ./sbin/start-master.sh
 
 # Aller à http://IP:8080
 
-# Ajouter manuellement des workers au cluster
-# /bin/spark-shell --master spark://IP:PORT 
-# Par exemple j'ai 2 machines dont le nom du hote sont: abd-spark-cluster et abd-spark-slave1
-# je peux lancer ces machines sur mon cluster à l'aide de la commande suivante
+# Ajouter manuellement un worker au cluster
+# ./bin/spark-class org.apache.spark.deploy.worker.Worker spark://IP:PORT 
+# Par exemple j'ai 1 machine dont le nom du hote sont: abd-spark-cluster
+# je peux lancer cette machine sur le cluster à l'aide de la commande suivante
 ./bin/spark-class org.apache.spark.deploy.worker.Worker spark://abd-spark-cluster:7077
 
-# Connecter à http://IP:8080
+# Aller à http://IP:8080
 
 # Arreter le cluster
 ./sbin/stop-master.sh
 ```
 
-**Lancer deployer un cluster spark en mode standalone sur plusieurs noeuds (avec plusieurs workers)**
+**Déployer automatiquement un cluster spark en mode standalone sur un ou plusieurs noeuds (workers)**
 ```sh
 # Créer un ficher conf/slaves dans le worker maitre
 nano conf/slaves
 # Ajouter les hôtes des workers (1 hôte par ligne)
 
-**Lancer les workers ajoutés précédemment (on est en mode de deployement standalone)**
+**Lancer les workers ajoutés précédemment**
 # Lancer le worker master
 ./sbin/start-master.sh 
+
+# Aller à http://IP:8080
 
 # Lancer les workers slave
 ./sbin/start-slaves.sh
 
-# Lancer le tous les workers
-./sbin/start-all.sh 
+# Aller à http://IP:8080
 
-# Arreter tous les workers
-./sbin/stop-all.sh
-
-# Arreter le noeud master
-./sbin/stop-master.sh
-```
-
-**Arreter les workers (on est en mode de deployement standalone)**
-```sh
-# Arreter le worker maitre
-./sbin/stop-master.sh 
-
-# Arreter les workers slave
-./sbin/stop-slaves.sh 
-
-# Arreter tous les workers
+# Arreter le cluster
 ./sbin/stop-all.sh
 ```
 
 **Créer une application spark**  
 Créer un ficher SimpleApp.py et ajouter lui le code ci-dessous
-
 ```python
 """SimpleApp.py"""
 from pyspark import SparkContext
