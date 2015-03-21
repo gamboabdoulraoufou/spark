@@ -157,9 +157,6 @@ build/mvn -Pyarn -Phadoop-2.4 -Dhadoop.version=2.4.0 -DskipTests clean package
 
 **Lancer spark en mode standalone**
 ```sh
-# lancer le noeud master du cluster standalone en localhost
-./sbin/start-master.sh
-
 # Lancer spark en mode interactif Scala
 ./bin/spark-shell
 
@@ -171,7 +168,14 @@ exit ()
 
 # Quitter le mode interactif Python
 exit ()
+```
 
+**Lancer deployer un cluster spark en mode standalone sur un seul noeud (avec 1 ou plusieurs workers)**
+```sh
+# lancer le noeud master du cluster spark
+./sbin/start-master.sh
+
+# Aller à http://IP:8080
 
 # Lancer des workers sur le cluster (tous les workers sont sur 1 seule machine)
 # Créer un fichier spark-env.sh dans le dossier conf
@@ -180,13 +184,26 @@ cp ./conf/spark-env.sh.template ./conf/spark-env.sh
 # Ajouter le paramètre suivant dans le fichier spark-env.sh
 echo "export SPARK_WORKER_INSTANCES=4" >> ./conf/spark-env.sh
 
+# Lancer les worker slaves du cluster
+./sbin/start-slaves.sh
+
+# Aller à http://IP:8080
+
+# Arrêtr les workers slave
+./sbin/stop-slaves.sh
+
+# Arrêter le noeud maitre du cluster
+./sbin/stop-master.sh
+```
+
+**Lancer deployer un cluster spark en mode standalone sur plusieurs noeuds (avec plusieurs workers)**
+```sh
 # lancer le noeud master
 ./sbin/start-master.sh
 
-# Lancer les workers slave
-./sbin/start-slaves.sh
+# Aller à http://IP:8080
 
-# Ajouter manuellement des workers (noeuds) sur le cluster
+# Ajouter manuellement des workers au cluster
 # /bin/spark-shell --master spark://IP:PORT 
 # Par exemple j'ai 2 machines dont le nom du hote sont: abd-spark-cluster et abd-spark-slave1
 # je peux lancer ces machines sur mon cluster à l'aide de la commande suivante
@@ -194,18 +211,12 @@ echo "export SPARK_WORKER_INSTANCES=4" >> ./conf/spark-env.sh
 
 # Connecter à http://IP:8080
 
-./bin/spark-class org.apache.spark.deploy.worker.Worker spark://abd-spark-slave1:7077
-
-# Connecter à http://IP:8080 pour voir le changement
-
-# Arreter tous les workers
-./sbin/stop-all.sh
-
-# Arreter le noeud master
+# Arreter le cluster
 ./sbin/stop-master.sh
+```
 
-
-# Ajouter automatiquement des workers (noeuds) sur le cluster
+**Lancer deployer un cluster spark en mode standalone sur plusieurs noeuds (avec plusieurs workers)**
+```sh
 # Créer un ficher conf/slaves dans le worker maitre
 nano conf/slaves
 # Ajouter les hôtes des workers (1 hôte par ligne)
