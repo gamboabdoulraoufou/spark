@@ -226,7 +226,7 @@ nano conf/slaves
 ./sbin/stop-all.sh
 ```
 
-**Créer une application spark**
+**Créer une application spark**  
 Créer un ficher SimpleApp.py et ajouter lui le code ci-dessous
 
 ```python
