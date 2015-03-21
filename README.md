@@ -5,9 +5,10 @@ En ce moment la dernière version de _Spark_ etait **1.3.0**
 
 **_L'article couvre les points suivants:_**
 - Installation des pré-requis
-- Création et installation de spark
-- Configuration basique de spark
-- Deploiement de spark sur un cluster
+- Installation et construction de spark
+- Lancement de spark en mode interactif (Scala et python)
+- Deploiement de spark sur un cluster Standalone avec un ou plusieurs noeud
+- Création et lancement d'une application Spark
 
 **_Caractérisques:_**
 - 2 VM sur Google Compute Engine
@@ -20,6 +21,7 @@ En ce moment la dernière version de _Spark_ etait **1.3.0**
   
   
 ### Installation des pré-requis
+
 **Créer un utilusateur sparkmanager**
 ```sh
 sudo adduser sparkmanager # mot de passe: spark
@@ -138,6 +140,8 @@ sudo apt-get install maven
 sudo apt-get install git
 ```
 
+### Installation et construction de Spark
+
 **Installer Spark**
 ```sh
 # cloner le dossier
@@ -155,7 +159,10 @@ export MAVEN_OPTS="-Xmx2g -XX:MaxPermSize=512M -XX:ReservedCodeCacheSize=512m"
 build/mvn -Pyarn -Phadoop-2.4 -Dhadoop.version=2.4.0 -DskipTests clean package
 ```
 
-**Lancer spark en mode standalone**
+
+### Lancement de spark en mode interactif (Scala et python)
+
+**Spark en mode insteractif**
 ```sh
 # Lancer spark en mode interactif Scala
 ./bin/spark-shell
@@ -169,6 +176,8 @@ exit ()
 # Quitter le mode interactif Python
 exit ()
 ```
+
+### Deploiement de Spark sur un cluster Standalone avec un ou plusieurs noeud
 
 **Deployer un cluster spark en mode standalone sur un seul noeud (avec 1 ou plusieurs workers)**
 ```sh
@@ -236,7 +245,9 @@ nano conf/slaves
 ./sbin/stop-all.sh
 ```
 
-**Créer une application spark**  
+### Création et lancement d'une application Spark
+
+**Application spark**  
 Créer un ficher SimpleApp.py et ajouter lui le code ci-dessous
 ```python
 """SimpleApp.py"""
