@@ -226,7 +226,24 @@ nano conf/slaves
 ./sbin/stop-all.sh
 ```
 
+**Créer une application spark**
+Créer un ficher SimpleApp.py et ajouter lui le code ci-dessous
 
+```python
+"""SimpleApp.py"""
+from pyspark import SparkContext
 
+logFile = "/home/sparkmanager/spark/README.md"  
+sc = SparkContext("local", "Simple App")
+logData = sc.textFile(logFile).cache()
 
+numAs = logData.filter(lambda s: 'a' in s).count()
+numBs = logData.filter(lambda s: 'b' in s).count()
 
+print "Lines with a: %i, lines with b: %i" % (numAs, numBs)
+```
+
+**Lancer l'application spark en localhost**
+```sh
+./home/sparkmanager/spark/bin/spark-submit --master local[4] SimpleApp.py
+```
