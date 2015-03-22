@@ -253,8 +253,16 @@ Créer un ficher SimpleApp.py et ajouter lui le code ci-dessous
 """SimpleApp.py"""
 from pyspark import SparkContext
 
+# Initialiser Spark
+appName = 'Simple App'
+master = 'local' # Deploiement en local
+# master = 'spark://abd-spark-cluster:7077' # Deploiement en mode cluster
+
+conf = SparkConf().setAppName(appName).setMaster(master)
+sc = SparkContext(conf=conf)
+
+# Chargement des données
 logFile = "/home/sparkmanager/spark/README.md"  
-sc = SparkContext("local", "Simple App")
 logData = sc.textFile(logFile).cache()
 
 numAs = logData.filter(lambda s: 'a' in s).count()
@@ -263,36 +271,14 @@ numBs = logData.filter(lambda s: 'b' in s).count()
 print "Lines with a: %i, lines with b: %i" % (numAs, numBs)
 ```
 
-**Lancer l'application spark en mode interactif**
+**Lancer l'application spark en mode local**
 ```sh
 # En localhost sur 2 coeurs
 ./home/sparkmanager/spark/bin/spark-submit --master local[2] SimpleApp.py
 ```
 
-**Lancer l'application spark en mode interactif**
+**Lancer l'application spark en mode cluster**
 ```sh
-# En localhost sur 2 coeurs
-./bin/spark-submit --class org.apache.spark.examples.SparkPi --master local[8] \
-  /path/to/examples.jar \
-  100
-  
-# Run on a Spark Standalone cluster in client deploy mode
-./bin/spark-submit \
-  --class org.apache.spark.examples.SparkPi \
-  --master spark://207.184.161.138:7077 \
-  --executor-memory 20G \
-  --total-executor-cores 100 \
-  /path/to/examples.jar \
-  1000
-
-# Run on a Spark Standalone cluster in cluster deploy mode with supervise
-./bin/spark-submit --class org.apache.spark.examples.SparkPi --master spark://207.184.161.138:7077 --deploy-mode cluster --supervise
-  --executor-memory 20G --total-executor-cores 100 /path/to/examples.jar 1000
-
-# Run on a YARN cluster
-export HADOOP_CONF_DIR=XXX
-./bin/spark-submit --class org.apache.spark.examples.SparkPi --master yarn-cluster --executor-memory 20G --num-executors 50 /path/to/examples.jar 1000
-
-# Run a Python application on a Spark Standalone cluster
-./bin/spark-submit --master spark://207.184.161.138:7077 examples/src/main/python/pi.py 1000
+# Cluster sur 5 coeurs
+./bin/spark-submit --master spark[5] SimpleApp.py
 ```
