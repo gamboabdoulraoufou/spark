@@ -287,7 +287,7 @@ print "Lines with a: %i, lines with b: %i" % (numAs, numBs)
 # Lancer le cluster
 ./sbin/start-all.sh 
 
-# Cluster sur 5 coeurs
+# Exécuter le fichier SimpleApp.py
 ./bin/spark-submit --master spark[5] SimpleApp.py
 
 # Arrêter le cluster
