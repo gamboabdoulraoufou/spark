@@ -274,7 +274,7 @@ print "Lines with a: %i, lines with b: %i" % (numAs, numBs)
 **Lancer l'application spark en mode local**
 ```sh
 # En localhost sur 2 coeurs
-./home/sparkmanager/spark/bin/spark-submit --master local[2] SimpleApp.py
+./bin/spark-submit --master local[2] SimpleApp.py
 ```
 
 **Lancer l'application spark en mode cluster**
