@@ -230,7 +230,6 @@ echo "export SPARK_WORKER_INSTANCES=4" >> ./conf/spark-env.sh
 nano conf/slaves
 # Ajouter les hôtes des workers (1 hôte par ligne)
 
-**Lancer les workers ajoutés précédemment**
 # Lancer le worker master
 ./sbin/start-master.sh 
 
@@ -273,12 +272,24 @@ print "Lines with a: %i, lines with b: %i" % (numAs, numBs)
 
 **Lancer l'application spark en mode local**
 ```sh
-# En localhost sur 2 coeurs
+# Lancer spark
+./sbin/start-master.sh 
+
+# Exécuter le fichier SimpleApp.py
 ./bin/spark-submit --master local[2] SimpleApp.py
+
+# Arrêter spark
+./sbin/stop-master.sh 
 ```
 
 **Lancer l'application spark en mode cluster**
 ```sh
+# Lancer le cluster
+./sbin/start-all.sh 
+
 # Cluster sur 5 coeurs
 ./bin/spark-submit --master spark[5] SimpleApp.py
+
+# Arrêter le cluster
+./sbin/stop-all.sh 
 ```
